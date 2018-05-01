@@ -369,8 +369,10 @@ void AddServiceDialog::createShortcut()
 	m_addRound->setShortcut(QKeySequence("Ins"));
 	m_removeRound->setShortcut(QKeySequence("Delete"));
 	m_printRound->setShortcut(QKeySequence("Ctrl+P"));
+
 	m_printElement->setShortcut(QKeySequence("Ctrl+P"));
 	m_removeElement->setShortcut(QKeySequence("Delete"));
+
 	m_acceptButton->setShortcut(QKeySequence("F10"));
 	m_rejectButton->setShortcut(QKeySequence("ESC"));
 }

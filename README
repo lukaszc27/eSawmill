@@ -1,4 +1,9 @@
 # eSawmill App Version 1.0 (ALFA)
+# Qt 5.10.1 (Windows Qt 5.6.3)
+
+# Program do zarządzania zamówieniami oraz usługami w tartaku
+# oparty na bazie danych MySQL oraz framework-u Qt
+# dostępny na platformy Windows/Linux
 
 # ver. 1.0 (alfa)
 # 30 kwiecień 2018

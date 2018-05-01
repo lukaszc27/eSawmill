@@ -226,6 +226,12 @@ void AddOrderDialog::createShortcut()
 	m_removeButton->setShortcut(QKeySequence("Delete"));
 	m_addArticle->setShortcut(QKeySequence("Ins"));
 	m_removeArticle->setShortcut(QKeySequence("Del"));
+
+	m_addArticle->setShortcut(QKeySequence("Ins"));
+	m_removeArticle->setShortcut(QKeySequence("Del"));
+
+	m_acceptButton->setShortcut(QKeySequence("F10"));
+	m_rejectButton->setShortcut(QKeySequence("ESC"));
 }
 
 //-----------------------------------------------

@@ -12,10 +12,25 @@
 
 
 // <summary>
+// klasa bazowa dla wszystkich widgetów konfiguracji
+// klasa abstrakcyjna
+// </summary>
+class ConfigurationWidget : public QWidget {
+	Q_OBJECT
+
+public:
+	ConfigurationWidget(QWidget* parent = 0);
+
+public slots:
+	virtual void save() { };			// zapis konfiguracji
+	virtual void initialize() { };		// odczyt konfiguracji
+};
+
+// <summary>
 // główna konfiguracja programu
 // możliwość edycji danych firmowych oraz loga firmy
 // </summary>
-class ConfigurationMainPage : public QWidget {
+class ConfigurationMainPage : public ConfigurationWidget {
 	Q_OBJECT
 
 public:
@@ -23,10 +38,10 @@ public:
 
 public slots:
 	void save();
+	void initialize();
 
 private:
 	void createWidgets();
-	void initlialize();
 
 	QLabel* m_titleLabel;
 	QLineEdit* m_companyName;
@@ -59,7 +74,7 @@ private slots:
 // <summary>
 // konfiguracja zamówienia
 // </summary>
-class ConfigurationOrderPage : public QWidget {
+class ConfigurationOrderPage : public ConfigurationWidget {
 	Q_OBJECT
 
 public:
@@ -67,10 +82,10 @@ public:
 
 public slots:
 	void save();
+	void initialize();
 
 private:
 	void createWidgets();
-	void initialize();
 
 	QDoubleSpinBox* m_priceEdit;
 	QCheckBox*		m_fastAdd;
@@ -79,7 +94,7 @@ private:
 // <summary>
 // konfiguracja usług
 // </summary>
-class ConfigurationServicePage : public QWidget {
+class ConfigurationServicePage : public ConfigurationWidget {
 	Q_OBJECT
 
 public:
@@ -87,10 +102,10 @@ public:
 
 public slots:
 	void save();
+	void initialize();
 
 private:
 	void createWidgets();
-	void initialize();
 
 	QDoubleSpinBox* m_roundPrice;
 	QDoubleSpinBox* m_eavesRoundPrice;
@@ -101,7 +116,7 @@ private:
 // <summary>
 // konfiguracja polączenia do wysyłania poczty mail
 // </summary>
-class ConfigurationMailPage : public QWidget {
+class ConfigurationMailPage : public ConfigurationWidget {
 	Q_OBJECT
 
 public:
@@ -109,10 +124,10 @@ public:
 
 public slots:
 	void save();
+	void initialize();
 
 private:
 	void createWidgets();
-	void initialize();
 
 	QLineEdit* m_host;
 	QSpinBox*  m_port;

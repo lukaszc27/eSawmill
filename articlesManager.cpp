@@ -95,6 +95,14 @@ void ArticlesManager::createWidgets()
 }
 
 //-----------------------------------------------
+// tworzy sktóty klawiszwe
+void ArticlesManager::createShortcut()
+{
+	m_addButton->setShortcut(QKeySequence("Ins"));
+	m_removeButton->setShortcut(QKeySequence("Del"));
+}
+
+//-----------------------------------------------
 // edycja zaznaczonego artykułu
 void ArticlesManager::editArticle(const QModelIndex & index)
 {

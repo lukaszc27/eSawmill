@@ -125,6 +125,8 @@ void MainWindow::unlockFunctions()
 	m_mdiArea->setLocked(false);
 	m_unlock->setEnabled(false);
 	m_lock->setEnabled(true);
+
+	m_mdiArea->repaint();
 }
 
 //--------------------------------------------------
@@ -145,6 +147,8 @@ void MainWindow::lockFunctions()
 
 	if (m_db.isOpen() && m_db.isValid())
 		m_db.close();
+
+	m_mdiArea->repaint();
 
 	// wywołujemy dialog logowania do bazy
 	QTimer::singleShot(0, this, SLOT(connectToDatabase()));

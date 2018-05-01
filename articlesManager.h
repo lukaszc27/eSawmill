@@ -25,6 +25,7 @@ public:
 
 private:
 	void createWidgets();
+	void createShortcut();
 
 	QPushButton* m_addButton;
 	QPushButton* m_removeButton;

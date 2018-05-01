@@ -4,6 +4,7 @@
 #include <qdialog.h>
 #include <qlistwidget.h>
 #include <qstackedwidget.h>
+#include <qtabwidget.h>
 #include <qdialogbuttonbox.h>
 
 #include "configurationWidgets.h"
@@ -22,26 +23,15 @@ public:
 
 private:
 	void createWidgets();
-	void createWidgetsForMenu();
 
-	QStackedWidget*		m_stackedWidget;
-	QListWidget*		m_listWidget;
+	QTabWidget* m_tabWidget;
 	QDialogButtonBox*	m_buttons;
-
-	// widgety dla menu konfiguracji
-	QListWidgetItem* m_mainMenuItem;
-	QListWidgetItem* m_ordersMenuItem;
-	QListWidgetItem* m_serviceMenuItem;
-	QListWidgetItem* m_mailMenuItem;
 
 	// widgety konfiguracji
 	ConfigurationMainPage* m_mainPage;
 	ConfigurationOrderPage* m_orderPage;
 	ConfigurationServicePage* m_servicePage;
 	ConfigurationMailPage* m_mailPage;
-
-private slots:
-	void changePage(QListWidgetItem* current, QListWidgetItem* previous);
 };
 
 #endif //__CONFIGURATION_DIALOG_H__

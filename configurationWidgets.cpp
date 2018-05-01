@@ -8,11 +8,17 @@
 #include "smtpclient.h"
 
 
-ConfigurationMainPage::ConfigurationMainPage(QWidget* parent)
+ConfigurationWidget::ConfigurationWidget(QWidget *parent)
 	: QWidget(parent)
 {
+}
+
+ConfigurationMainPage::ConfigurationMainPage(QWidget* parent)
+	: ConfigurationWidget(parent)
+{
+	setWindowTitle(tr("Konfiguracja firmy"));
 	createWidgets();
-	initlialize();
+	initialize();
 
 	connect(m_loadButton, SIGNAL(clicked()), this, SLOT(loadBannerFromFile()));
 }
@@ -123,7 +129,7 @@ void ConfigurationMainPage::createWidgets()
 
 //-------------------------------------------------------
 // wczytuje zapisaną konfiguracje
-void ConfigurationMainPage::initlialize()
+void ConfigurationMainPage::initialize()
 {
 	QSettings settings;
 	m_companyName->setText(settings.value("app/companyName").toString());
@@ -196,8 +202,9 @@ void ConfigurationMainPage::loadBannerFromFile()
 
 //=============================================================
 ConfigurationOrderPage::ConfigurationOrderPage(QWidget* parent)
-	: QWidget(parent)
+	: ConfigurationWidget(parent)
 {
+	setWindowTitle(tr("Zamówienia"));
 	createWidgets();
 	initialize();
 }
@@ -244,8 +251,9 @@ void ConfigurationOrderPage::initialize()
 
 //=============================================================
 ConfigurationServicePage::ConfigurationServicePage(QWidget* parent)
-	: QWidget(parent)
+	: ConfigurationWidget(parent)
 {
+	setWindowTitle(tr("Usługi"));
 	createWidgets();
 	initialize();
 }
@@ -302,8 +310,9 @@ void ConfigurationServicePage::initialize()
 
 //=============================================================
 ConfigurationMailPage::ConfigurationMailPage(QWidget* parent)
-	: QWidget(parent)
+	: ConfigurationWidget(parent)
 {
+	setWindowTitle(tr("E-Mail"));
 	createWidgets();
 	initialize();
 }
