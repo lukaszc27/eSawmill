@@ -107,13 +107,16 @@ private:
 	QLabel*			m_articlePriceLabel;
 
 	// widgety filtorwania kolumn
-	QDoubleSpinBox* m_minValue;
-	QDoubleSpinBox* m_maxValue;
-	QRadioButton* m_widthColumn;
-	QRadioButton* m_heightColumn;
-	QRadioButton* m_lengthColumn;
+	QDoubleSpinBox* m_widthValue;
+	QDoubleSpinBox* m_heightValue;
 	QGroupBox* m_sizeFilterGroup;
 	QPushButton* m_rangeFilterButton;
+
+	// widgety filtowania długości elementów
+	QGroupBox*		m_lengthFilterGroup;
+	QDoubleSpinBox* m_minLength;
+	QDoubleSpinBox* m_maxLength;
+	QPushButton*	m_filterLengthButton;
 
 	// akcje dla przycisku dodaj
 	QAction* m_addAction;
@@ -135,6 +138,7 @@ private slots:
 	void exportItemsToFile();		// zapisuje wprowadzone elementy w pliku XML
 	void importItemsFromFile();		// importuje listę elementów z pliku
 	void filterByRange();			// filtruje wiersze według określonych danych
+	void filterByLength();			// filtracja elementów według długośći
 	void duplicateSelectedItem();	// powielda zaznaczony rekord
 	void vatEnabled(int state);		// aktywuje lub dezaktywuje wybór vatu
 	void activatedVatValue(const QString& text);	// ustawienie aktywowanej wartości do modelu

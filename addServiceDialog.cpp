@@ -67,6 +67,8 @@ AddServiceDialog::AddServiceDialog(QWidget* parent, const bool updateMode, const
 	connect(m_addArticle, SIGNAL(clicked()), this, SLOT(addArticle()));
 	connect(m_removeArticle, SIGNAL(clicked()), m_articleModel, SLOT(removeCheckedItem()));
 	connect(m_articleFilterText, SIGNAL(textChanged(QString)), this, SLOT(filterArticles(QString)));
+	connect(m_lengthFilterButton, &QPushButton::clicked, this, &AddServiceDialog::lengthFilterButtonClicked);
+	connect(m_lengthFilterGroup, &QGroupBox::clicked, m_elementsFilterModel, &ElementsFilterModel::setLengthFilterEnable);
 }
 
 //-----------------------------------------
@@ -594,16 +596,19 @@ QWidget * AddServiceDialog::elementWidget()
 	m_optionElement = new QPushButton(tr("Operacje"), this);
 	m_printElement	= new QPushButton(QIcon("icons/print.png"), tr("Drukuj"), widget);
 	m_duplicateButton = new QPushButton(tr("Powiel"), widget);
-	m_rangeFilterGroup	= new QGroupBox(tr("Filter"), widget);
+	m_rangeFilterGroup	= new QGroupBox(tr("Filtr przekroju"), widget);
 	m_rangeFilterButton = new QPushButton(tr("Filtruj"), widget);
-	m_widthColumn		= new QRadioButton(tr("Szerokość"), widget);
-	m_heightColumn		= new QRadioButton(tr("Wysokość"), widget);
-	m_lengthColumn		= new QRadioButton(tr("Długość"), widget);
-	m_minValue			= new QDoubleSpinBox(widget);
-	m_maxValue			= new QDoubleSpinBox(widget);
+	m_widthValue		= new QDoubleSpinBox(widget);
+	m_heightValue		= new QDoubleSpinBox(widget);
+	m_lengthFilterGroup = new QGroupBox(tr("Filtr długości"), widget);
+	m_lengthFilterButton = new QPushButton(tr("Filtruj"), widget);
+	m_minLength			= new QDoubleSpinBox(widget);
+	m_maxLength			= new QDoubleSpinBox(widget);
 
 	m_rangeFilterGroup->setCheckable(true);
 	m_rangeFilterGroup->setChecked(false);
+	m_lengthFilterGroup->setCheckable(true);
+	m_lengthFilterGroup->setChecked(false);
 
 	// tworzymy oraz ustawaimy model dla widoku
 	m_elementsModel = new SquaredModel(this);
@@ -628,28 +633,37 @@ QWidget * AddServiceDialog::elementWidget()
 	addMenu->addAction(tr("Dodaj grupe elementów"), this, SLOT(addGroupElement()), QKeySequence("Ctrl+Ins"));
 	m_addElement->setMenu(addMenu);
 
-	QHBoxLayout* rangeColumnFilterlayout = new QHBoxLayout;
-	rangeColumnFilterlayout->addWidget(m_widthColumn);
-	rangeColumnFilterlayout->addWidget(m_heightColumn);
-	rangeColumnFilterlayout->addWidget(m_lengthColumn);
-
 	QHBoxLayout* rangeFilterEditLayout = new QHBoxLayout;
-	rangeFilterEditLayout->addWidget(new QLabel(tr("Od"), widget));
-	rangeFilterEditLayout->addWidget(m_minValue);
-	rangeFilterEditLayout->addWidget(new QLabel(tr("Do"), widget));
-	rangeFilterEditLayout->addWidget(m_maxValue);
+	rangeFilterEditLayout->addWidget(new QLabel(tr("Szer"), widget));
+	rangeFilterEditLayout->addWidget(m_widthValue);
+	rangeFilterEditLayout->addWidget(new QLabel(tr("Wys"), widget));
+	rangeFilterEditLayout->addWidget(m_heightValue);
+
+	QHBoxLayout* rangeLengthLayout = new QHBoxLayout;
+	rangeLengthLayout->addWidget(new QLabel(tr("Od"), widget));
+	rangeLengthLayout->addWidget(m_minLength);
+	rangeLengthLayout->addWidget(new QLabel(tr("Do"), widget));
+	rangeLengthLayout->addWidget(m_maxLength);
+
+	QHBoxLayout* lengthFilterButton = new QHBoxLayout;
+	lengthFilterButton->addStretch(1);
+	lengthFilterButton->addWidget(m_lengthFilterButton);
+
+	QVBoxLayout* mainLengthFilterLayout = new QVBoxLayout(m_lengthFilterGroup);
+	mainLengthFilterLayout->addLayout(rangeLengthLayout);
+	mainLengthFilterLayout->addLayout(lengthFilterButton);
 
 	QHBoxLayout* rangeFilterButtonLayouts = new QHBoxLayout;
 	rangeFilterButtonLayouts->addStretch(1);
 	rangeFilterButtonLayouts->addWidget(m_rangeFilterButton);
 
 	QVBoxLayout* rangeFilterMainLayout = new QVBoxLayout(m_rangeFilterGroup);
-	rangeFilterMainLayout->addLayout(rangeColumnFilterlayout);
 	rangeFilterMainLayout->addLayout(rangeFilterEditLayout);
 	rangeFilterMainLayout->addLayout(rangeFilterButtonLayouts);
 
 	QHBoxLayout* filtersLayout = new QHBoxLayout;
 	filtersLayout->addWidget(m_rangeFilterGroup);
+	filtersLayout->addWidget(m_lengthFilterGroup);
 	filtersLayout->addStretch(1);
 
 	QHBoxLayout* buttonsLayout = new QHBoxLayout;
@@ -811,6 +825,7 @@ void AddServiceDialog::updateAllWidgets()
 // filtruje wiersze według wskazanych kategorii
 void AddServiceDialog::rangeFilterButtonClicked()
 {
+	/*
 	if (m_widthColumn->isChecked())
 		m_elementsFilterModel->setFilterColumn(0);
 	else if (m_heightColumn->isChecked())
@@ -820,6 +835,18 @@ void AddServiceDialog::rangeFilterButtonClicked()
 
 	m_elementsFilterModel->setMinimumValue(m_minValue->value());
 	m_elementsFilterModel->setMaximumValue(m_maxValue->value());
+	*/
+
+	m_elementsFilterModel->setWidth(m_widthValue->value());
+	m_elementsFilterModel->setHeight(m_heightValue->value());
+}
+
+//-----------------------------------------
+// filtruje elementy kantowane względem długości
+void AddServiceDialog::lengthFilterButtonClicked()
+{
+	m_elementsFilterModel->setMaxLength(m_maxLength->value());
+	m_elementsFilterModel->setMinLength(m_minLength->value());
 }
 
 //-----------------------------------------

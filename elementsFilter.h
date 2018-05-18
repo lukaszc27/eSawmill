@@ -2,6 +2,7 @@
 #define __ELEMENTS_FILTER_H__
 
 #include <qsortfilterproxymodel.h>
+#include <QMessageBox>
 
 // <summary>
 // odfiltorwuje wiersze w pewnym zakresie
@@ -14,19 +15,23 @@ public:
 	ElementsFilterModel(QObject* parent = 0);
 
 public slots:
-	void setMinimumValue(double value) { m_minValue = value; invalidateFilter(); }
-	void setMaximumValue(double value) { m_maxValue = value; invalidateFilter(); }
-	void setFilterColumn(int column) { m_filterColumn = column; invalidateFilter(); }
+	void setWidth(double value) { m_widthValue = value; invalidateFilter(); }
+	void setHeight(double value) { m_heightValue = value; invalidateFilter(); }
 	void setEnable(bool enable) { m_useFilter = enable; invalidateFilter(); }
+	void setLengthFilterEnable(bool enable) { m_lengthFilter = enable; invalidateFilter(); }
+	void setMinLength(double value) { m_minLength = value; invalidateFilter(); }
+	void setMaxLength(double value) { m_maxLength = value; invalidateFilter(); }
 
 protected:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const override;
 
 private:
-	int m_filterColumn;
-	double m_minValue;
-	double m_maxValue;
+	double m_widthValue;
+	double m_heightValue;
+	double m_minLength;
+	double m_maxLength;
 	bool m_useFilter;
+	bool m_lengthFilter;
 };
 
 #endif //__ELEMENTS_FILTER_H__

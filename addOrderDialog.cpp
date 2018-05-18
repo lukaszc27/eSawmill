@@ -53,6 +53,11 @@ AddOrderDialog::AddOrderDialog(QWidget* parent, bool updateMode, int id)
 	connect(m_removeArticle, SIGNAL(clicked()), m_articleModel, SLOT(removeCheckedItem()));
 	connect(m_mailSendButton, SIGNAL(clicked()), this, SLOT(sendByMailButton()));
 
+	connect(m_lengthFilterGroup, &QGroupBox::clicked,
+			m_elementsProxyModel, &ElementsFilterModel::setLengthFilterEnable);
+
+	connect(m_filterLengthButton, &QPushButton::clicked, this, &AddOrderDialog::filterByLength);
+
 	// wczytujemy dane jeśli otwarto w trybie aktualizacji
 	if (m_updateMode)
 	{
@@ -87,6 +92,9 @@ AddOrderDialog::AddOrderDialog(QWidget* parent, bool updateMode, int id)
 			m_duplicateButton->setEnabled(false);
 			m_model->readOnly(true);
 			m_notesEdit->setReadOnly(true);
+			m_addArticle->setEnabled(false);
+			m_removeArticle->setEnabled(false);
+			m_articleModel->setReadOnly(true);
 		}
 	}
 	else
@@ -315,13 +323,14 @@ QWidget* AddOrderDialog::elementsWidget()
 	m_planedLabel	= new QLabel(tr("<b>Strugane 0 m<sup>3</sup></b>"), widget);
 	m_priceLabel	= new QLabel(tr("<b>Do zapłaty 0 zł</b>"), widget);
 	m_itemsView		= new QTreeView(widget);
-	m_sizeFilterGroup = new QGroupBox(tr("Filter"), widget);
-	m_widthColumn = new QRadioButton(tr("Szerokość"), widget);
-	m_heightColumn = new QRadioButton(tr("Wysokość"), widget);
-	m_lengthColumn = new QRadioButton(tr("Długość"), widget);
-	m_minValue = new QDoubleSpinBox(widget);
-	m_maxValue = new QDoubleSpinBox(widget);
+	m_sizeFilterGroup = new QGroupBox(tr("Filtr przekroju"), widget);
+	m_widthValue = new QDoubleSpinBox(widget);
+	m_heightValue = new QDoubleSpinBox(widget);
 	m_rangeFilterButton = new QPushButton(tr("Filtruj"), widget);
+	m_lengthFilterGroup = new QGroupBox(tr("Filter długości"), widget);
+	m_minLength = new QDoubleSpinBox(widget);
+	m_maxLength = new QDoubleSpinBox(widget);
+	m_filterLengthButton = new QPushButton(tr("Filtruj"), widget);
 
 	// przypisujemy modele do widoku
 	m_model = new SquaredModel(this);
@@ -343,6 +352,10 @@ QWidget* AddOrderDialog::elementsWidget()
 	m_sizeFilterGroup->setCheckable(true);
 	m_sizeFilterGroup->setChecked(false);	// na początku filtr nie aktywny
 
+	// wartości początkowe dla filtra długości elementów
+	m_lengthFilterGroup->setCheckable(true);
+	m_lengthFilterGroup->setChecked(false);
+
 	// menu dla przycisku dodawania
 	QMenu* addButtonMenu = new QMenu(this);
 	addButtonMenu->addAction(tr("Dodaj"), this, SLOT(addSingleItem()), QKeySequence("Ins"));
@@ -360,24 +373,32 @@ QWidget* AddOrderDialog::elementsWidget()
 	optionsButton->setMenu(optionsButtonMenu);	// dodajemy menu do przycisku
 
 	QHBoxLayout* sizeLayout = new QHBoxLayout;
-	sizeLayout->addWidget(new QLabel(tr("Od"), widget));
-	sizeLayout->addWidget(m_minValue);
-	sizeLayout->addWidget(new QLabel(tr("Do"), widget));
-	sizeLayout->addWidget(m_maxValue);
+	sizeLayout->addWidget(new QLabel(tr("Szer"), widget));
+	sizeLayout->addWidget(m_widthValue);
+	sizeLayout->addWidget(new QLabel(tr("Wys"), widget));
+	sizeLayout->addWidget(m_heightValue);
 
-	QHBoxLayout* columnFilterLayout = new QHBoxLayout;
-	columnFilterLayout->addWidget(m_widthColumn);
-	columnFilterLayout->addWidget(m_heightColumn);
-	columnFilterLayout->addWidget(m_lengthColumn);
+	QHBoxLayout* lengthLayout = new QHBoxLayout;
+	lengthLayout->addWidget(new QLabel(tr("min"), widget));
+	lengthLayout->addWidget(m_minLength);
+	lengthLayout->addWidget(new QLabel(tr("max"), widget));
+	lengthLayout->addWidget(m_maxLength);
 
 	QHBoxLayout* rangeFilterButtonLayout = new QHBoxLayout;
 	rangeFilterButtonLayout->addStretch(1);
 	rangeFilterButtonLayout->addWidget(m_rangeFilterButton);
 
+	QHBoxLayout* lengthFilterButtonLayout = new QHBoxLayout;
+	lengthFilterButtonLayout->addStretch(1);
+	lengthFilterButtonLayout->addWidget(m_filterLengthButton);
+
 	QVBoxLayout* mainFilterLayout = new QVBoxLayout(m_sizeFilterGroup);
-	mainFilterLayout->addLayout(columnFilterLayout);
 	mainFilterLayout->addLayout(sizeLayout);
 	mainFilterLayout->addLayout(rangeFilterButtonLayout);
+
+	QVBoxLayout* mainLengthFilterLayout = new QVBoxLayout(m_lengthFilterGroup);
+	mainLengthFilterLayout->addLayout(lengthLayout);
+	mainLengthFilterLayout->addLayout(lengthFilterButtonLayout);
 
 	QHBoxLayout* labelLayout = new QHBoxLayout;
 	labelLayout->addStretch(6);
@@ -398,6 +419,7 @@ QWidget* AddOrderDialog::elementsWidget()
 
 	QHBoxLayout* filtersLayout = new QHBoxLayout;
 	filtersLayout->addWidget(m_sizeFilterGroup);
+	filtersLayout->addWidget(m_lengthFilterGroup);
 	filtersLayout->addStretch(1);
 
 	QVBoxLayout* mainLayout = new QVBoxLayout(widget);
@@ -480,7 +502,7 @@ void AddOrderDialog::importItemsFromFile()
 //-----------------------------------------------
 // filtruje wiersze według określonych norm
 void AddOrderDialog::filterByRange()
-{
+{/*
 	if (m_widthColumn->isChecked())
 		m_elementsProxyModel->setFilterColumn(0);
 	else if (m_heightColumn->isChecked())
@@ -489,7 +511,18 @@ void AddOrderDialog::filterByRange()
 		m_elementsProxyModel->setFilterColumn(2);
 
 	m_elementsProxyModel->setMinimumValue(m_minValue->value());
-	m_elementsProxyModel->setMaximumValue(m_maxValue->value());
+	m_elementsProxyModel->setMaximumValue(m_maxValue->value());*/
+
+	m_elementsProxyModel->setWidth(m_widthValue->value());
+	m_elementsProxyModel->setHeight(m_heightValue->value());
+}
+
+//-----------------------------------------------
+// filtruje wiersze według długości elementów
+void AddOrderDialog::filterByLength()
+{
+	m_elementsProxyModel->setMinLength(m_minLength->value());
+	m_elementsProxyModel->setMaxLength(m_maxLength->value());
 }
 
 //-----------------------------------------------

@@ -107,6 +107,11 @@ private:
 	QPushButton* m_printElement;
 	QPushButton* m_duplicateButton;
 
+	QGroupBox* m_lengthFilterGroup;
+	QPushButton* m_lengthFilterButton;
+	QDoubleSpinBox* m_minLength;
+	QDoubleSpinBox* m_maxLength;
+
 	// widgety dla zakładki "Artykuły"
 	QTreeView* m_articleView;
 	QPushButton* m_addArticle;
@@ -120,8 +125,8 @@ private:
 	QRadioButton* m_widthColumn;
 	QRadioButton* m_heightColumn;
 	QRadioButton* m_lengthColumn;
-	QDoubleSpinBox* m_minValue;
-	QDoubleSpinBox* m_maxValue;
+	QDoubleSpinBox* m_widthValue;
+	QDoubleSpinBox* m_heightValue;
 	QPushButton* m_rangeFilterButton;
 
 	QWidget* mainWidget();		// tworzy zakładkę (głównych informacji o usłudze)
@@ -146,6 +151,7 @@ private slots:
 	void exportRoundsToFile();						// zapisuje kłody do pliku
 	void updateAllWidgets();						// aktualizuje stan wszystkich widgetów na podstawie modelu
 	void rangeFilterButtonClicked();				// filtorwanie wierszy według wskazanych kategorii
+	void lengthFilterButtonClicked();				// filtrowanie elementów konstrukcyjncych według długości
 	void duplicateSelectedItem();					// powiela zaznaczony element
 	void duplicateRoundSelectedItems();
 	void vatCheckState(int state);					// aktywuje lub dezaktywuje doliczanie vatu
